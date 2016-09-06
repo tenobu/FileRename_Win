@@ -3,6 +3,27 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         Title="MainWindow" Height="350" Width="525"
         Loaded="Window_Loaded" Closing="Window_Closing">
+    <Window.Resources>
+        <DataTemplate x:Key="DataTemplate1">
+            <Grid Height="50">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="50"/>
+                    <ColumnDefinition Width="*"/>
+                </Grid.ColumnDefinitions>
+                <Image Source="{Binding Path=Icon}"
+					   HorizontalAlignment="Left" Height="40" Margin="5,5,0,0" VerticalAlignment="Top" Width="40"/>
+                <Label Content="{Binding Path=File}"
+					   Grid.Column="1" HorizontalAlignment="Stretch"
+					   Margin="10,10,10,0" VerticalAlignment="Top" Width="Auto"/>
+                <Label Content="{Binding Path=SizeS}"
+					   Grid.Column="1" HorizontalAlignment="Stretch"
+					   Margin="10,0,10,10" VerticalAlignment="Bottom" Width="Auto"/>
+                <!--TextBlock Text="{Binding Path=Path}"
+						   Grid.Column="1" HorizontalAlignment="Stretch"
+						   Margin="10,35,10,10" VerticalAlignment="Stretch" Height="Auto"/-->
+            </Grid>
+        </DataTemplate>
+    </Window.Resources>
 
     <Grid>
 
@@ -22,16 +43,16 @@
             </StackPanel>
         </Button>
 
-        <Label Content="FoldersCount" HorizontalAlignment="Left" Margin="43,39,0,0" VerticalAlignment="Top" Width="90"/>
-        <Label Name="label_FoldersCount"
-               Content="0" Margin="138,39,0,0" VerticalAlignment="Top" HorizontalAlignment="Left" Width="122"/>
-        <Label Content="FilesCount" HorizontalAlignment="Left" Margin="265,39,0,0" VerticalAlignment="Top" Width="69"/>
-        <Label Name="label_FilesCount"
-               Content="0" Margin="339,39,0,0" VerticalAlignment="Top" HorizontalAlignment="Left" Width="122"/>
-        <Label Content="FilesSize" HorizontalAlignment="Left" Margin="43,67,0,0" VerticalAlignment="Top" Width="64"/>
-        <Label Name="label_FilesSize"
-               Content="0 Byte" Margin="117,67,10,0" VerticalAlignment="Top"/>
-        <ListBox Margin="43,112,10,61"/>
+        <Label Name="label_Count"
+               Content="フォルダ数 0、ファイル数 0" Margin="43,38,10,0" VerticalAlignment="Top"/>
+        <Label Name="label_Size"
+               Content="サイズ 0 Byte" Margin="43,57,10,0" VerticalAlignment="Top"/>
+        
+        <ListBox Margin="43,90,10,61">
+            <Grid Height="49" Width="460">
+                <ListBoxItem Content="ListBoxItem" ContentTemplate="{DynamicResource DataTemplate1}"/>
+            </Grid>
+        </ListBox>
 
         <Button Name="button_Check"
                 Content="Check" Margin="0,0,10,32"

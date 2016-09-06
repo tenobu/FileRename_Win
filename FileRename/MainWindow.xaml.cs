@@ -55,13 +55,7 @@ namespace FileRename
 
 			if (Directory.Exists(str_Folder))
 			{
-				long_FolderCount = long_FileCount = long_Length = 0;
-
-				// タスクを分けて、メインからサブにタスクを移す。
-				var task = Task.Factory.StartNew(() =>
-				{
-					CheckFolder(str_Folder);
-				});
+				CheckFolder();
 			}
 		}
 
@@ -118,7 +112,7 @@ namespace FileRename
 
 				long_FolderCount = long_FileCount = long_Length = 0;
 
-				CheckFolder(str_Folder);
+				CheckFolder();
 			}
 		}
 
@@ -134,9 +128,7 @@ namespace FileRename
 				label_Folder.Content = files[0];
 				str_Folder = (string)label_Folder.Content;
 
-				long_FolderCount = long_FileCount = long_Length = 0;
-
-				CheckFolder(str_Folder);
+				CheckFolder();
 			}
 		}
 
@@ -161,14 +153,23 @@ namespace FileRename
 					label_Folder.Content = fbd.SelectedPath;
 					str_Folder = (string)label_Folder.Content;
 
-					long_FolderCount = long_FileCount = long_Length = 0;
-
-					CheckFolder(str_Folder);
+					CheckFolder();
 				}
 			}
 		}
 
-		private void CheckFolder(string folder_path)
+		private void CheckFolder()
+		{
+			long_FolderCount = long_FileCount = long_Length = 0;
+
+			// タスクを分けて、メインからサブにタスクを移す。
+			var task = Task.Factory.StartNew(() =>
+			{
+				GetFolder(str_Folder);
+			});
+		}
+
+		private void GetFolder(string folder_path)
 		{
 			foreach (var file_path in Directory.GetFiles(folder_path))
 			{
@@ -178,8 +179,11 @@ namespace FileRename
 				button_Check.Dispatcher.BeginInvoke(
 					new Action(() =>
 					{
-						label_FilesCount.Content = long_FileCount;
-						label_FilesSize .Content = long_Length.ToString("###,##0 Byte");
+						label_Count.Content =
+							long_FolderCount.ToString("フォルダ数 ###,##0") + "、" +
+							long_FileCount  .ToString("ファイル数 ###,##0");
+						label_Size.Content =
+							long_Length     .ToString("サイズ ###,##0 Byte");
 					}));
 			}
 
@@ -190,22 +194,18 @@ namespace FileRename
 				button_Check.Dispatcher.BeginInvoke(
 					new Action(() =>
 					{
-						label_FoldersCount.Content = long_FolderCount;
+						label_Count.Content =
+							long_FolderCount.ToString("フォルダ数 ###,##0") + "、" +
+							long_FileCount  .ToString("ファイル数 ###,##0");
 					}));
 
-				CheckFolder(c_folder_path);
+				GetFolder(c_folder_path);
 			}
 		}
 
 		private void button_Check_Click(object sender, RoutedEventArgs e)
 		{
-			long_FolderCount = long_FileCount = long_Length = 0;
-
-			// タスクを分けて、メインからサブにタスクを移す。
-			var task = Task.Factory.StartNew(() =>
-			{
-				CheckFolder(str_Folder);
-			});
+			CheckFolder();
 		}
 	}
 }
