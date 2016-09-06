@@ -1,8 +1,42 @@
 ﻿<Window x:Class="FileRename.MainWindow"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-        Title="MainWindow" Height="350" Width="525">
+        Title="MainWindow" Height="350" Width="525"
+        Loaded="Window_Loaded" Closing="Window_Closing">
+
     <Grid>
-        
+
+        <Image Name="image_Folder"
+               HorizontalAlignment="Left" Height="23" Margin="10,10,0,0" VerticalAlignment="Top" Width="23"
+               Source="Images\folder.png"
+               DragOver="image_Folder_DragOver" Drop="image_Folder_Drop" AllowDrop="true"/>
+        <Label Name="label_Folder"
+               Content="無し" Height="23" Margin="38,10,90,0" VerticalAlignment="Top" FontFamily="Calibri"
+               Drop="label_Folder_Drop" AllowDrop="True"/>
+        <Button Name="button_Folder"
+                Width="75" Margin="0,11,10,0" HorizontalAlignment="Right" Height="23" VerticalAlignment="Top"
+                Click="button_Folder_Click">
+            <StackPanel  Orientation="Horizontal">
+                <Image Source="Images/folder.png"/>
+                <TextBlock Text=" Folder" VerticalAlignment="Center"/>
+            </StackPanel>
+        </Button>
+
+        <Label Content="FoldersCount" HorizontalAlignment="Left" Margin="43,39,0,0" VerticalAlignment="Top" Width="90"/>
+        <Label Name="label_FoldersCount"
+               Content="0" Margin="138,39,0,0" VerticalAlignment="Top" HorizontalAlignment="Left" Width="122"/>
+        <Label Content="FilesCount" HorizontalAlignment="Left" Margin="265,39,0,0" VerticalAlignment="Top" Width="69"/>
+        <Label Name="label_FilesCount"
+               Content="0" Margin="339,39,0,0" VerticalAlignment="Top" HorizontalAlignment="Left" Width="122"/>
+        <Label Content="FilesSize" HorizontalAlignment="Left" Margin="43,67,0,0" VerticalAlignment="Top" Width="64"/>
+        <Label Name="label_FilesSize"
+               Content="0 Byte" Margin="117,67,10,0" VerticalAlignment="Top"/>
+        <ListBox Margin="43,112,10,61"/>
+
+        <Button Name="button_Check"
+                Content="Check" Margin="0,0,10,32"
+                Click="button_Check_Click" HorizontalAlignment="Right" Width="75" Height="24" VerticalAlignment="Bottom"/>
+
     </Grid>
+
 </Window>

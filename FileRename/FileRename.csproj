@@ -36,6 +36,7 @@
   <ItemGroup>
     <Reference Include="System" />
     <Reference Include="System.Data" />
+    <Reference Include="System.Windows.Forms" />
     <Reference Include="System.Xml" />
     <Reference Include="Microsoft.CSharp" />
     <Reference Include="System.Core" />
@@ -92,6 +93,16 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Images\application_view_icons.png" />
+    <Resource Include="Images\equals.png" />
+    <Resource Include="Images\file_extension_chm.png" />
+    <Resource Include="Images\find.ico" />
+    <Resource Include="Images\find.png" />
+    <Resource Include="Images\folder.png" />
+    <Resource Include="Images\hatena.png" />
+    <Resource Include="Images\not_equals.png" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
