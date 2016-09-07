@@ -28,7 +28,12 @@ namespace FileRename
 
 		private long long_FolderCount = 0, long_FileCount, long_Length = 0;
 
-	
+		private List<FolderFile_data> list_FolderFiles = null;
+		//private bool bool_ListFlag = false;
+
+		private Dictionary<string, List<FolderFile_data>> dic_FolderFiles = null;
+
+
 		public MainWindow()
 		{
 			InitializeComponent();
@@ -158,9 +163,21 @@ namespace FileRename
 			}
 		}
 
+		private void button_Check_Click(object sender, RoutedEventArgs e)
+		{
+			CheckFolder();
+		}
+
 		private void CheckFolder()
 		{
+			list_FolderFiles = null;
+			dic_FolderFiles  = new Dictionary<string, List<FolderFile_data>>();
+
+			listBox_FolderFiles.Items.Clear();
+
 			long_FolderCount = long_FileCount = long_Length = 0;
+
+			//bool_ListFlag = false;
 
 			// タスクを分けて、メインからサブにタスクを移す。
 			var task = Task.Factory.StartNew(() =>
@@ -171,8 +188,27 @@ namespace FileRename
 
 		private void GetFolder(string folder_path)
 		{
+			var list_ff = new List<FolderFile_data>();
+
+			dic_FolderFiles.Add(folder_path, list_ff);
+
+			var bool_ListFlag = false;
+
+			if (folder_path.Equals(str_Folder))
+			{
+				bool_ListFlag = true;
+
+				list_FolderFiles = list_ff;
+			}
+			else
+			{
+				bool_ListFlag = false;
+			}
+
 			foreach (var file_path in Directory.GetFiles(folder_path))
 			{
+				AddFolderFilesList(list_ff, bool_ListFlag, "File", file_path);
+
 				long_FileCount++;
 				long_Length += new FileInfo(file_path).Length;
 
@@ -189,6 +225,8 @@ namespace FileRename
 
 			foreach (var c_folder_path in Directory.GetDirectories(folder_path))
 			{
+				AddFolderFilesList(list_ff, bool_ListFlag, "Directory", c_folder_path);
+
 				long_FolderCount++;
 
 				button_Check.Dispatcher.BeginInvoke(
@@ -203,9 +241,92 @@ namespace FileRename
 			}
 		}
 
-		private void button_Check_Click(object sender, RoutedEventArgs e)
+		private void AddFolderFilesList(List<FolderFile_data> list_ff, bool bool_ListFlag, string str_ff, string str_path)
 		{
-			CheckFolder();
+			//listBox_FolderFiles.Dispatcher.BeginInvoke(
+			//	new Action(() =>
+			//	{
+					var ffd = new FolderFile_data();
+
+					ffd.str_Type   = str_ff;
+					ffd.str_FFPath = str_path;
+
+					if (str_ff.Equals("Directory"))
+					{
+						var di = new DirectoryInfo(str_path);
+
+						ffd.image_Icon = new BitmapImage(new Uri(@"Images\folder.png", UriKind.Relative));
+						ffd.str_FFName = di.Name;
+						ffd.long_Size  = 0;
+						ffd.str_SizeS  = "";
+
+						list_ff.Add(ffd);
+
+						if (bool_ListFlag)
+						{
+							listBox_FolderFiles.Dispatcher.BeginInvoke(
+								new Action(() =>
+								{
+									listBox_FolderFiles.ItemsSource = list_ff;
+								}));
+						}
+					}
+					else if (
+						str_ff.Equals("File"))
+					{
+						var fi = new FileInfo(str_path);
+
+						if (fi.Extension.ToLower().Equals(".bmp" ) ||
+							fi.Extension.ToLower().Equals(".gif" ) ||
+							fi.Extension.ToLower().Equals(".jpg" ) ||
+							fi.Extension.ToLower().Equals(".jpeg") ||
+							fi.Extension.ToLower().Equals(".png" ) ||
+							fi.Extension.ToLower().Equals(".tiff") ||
+							fi.Extension.ToLower().Equals(".ico" ))
+						{
+							ffd.image_Icon = new BitmapImage(new Uri(fi.FullName));
+						}
+						else
+						{
+							ffd.image_Icon = SHFileInfo.GetBitmap(fi.FullName);
+						}
+
+						ffd.str_FFName = fi.Name;
+						ffd.long_Size  = fi.Length;
+						ffd.str_SizeS  = fi.Length.ToString("###,##0 Byte");
+
+						list_ff.Add(ffd);
+
+						if (bool_ListFlag)
+						{
+							listBox_FolderFiles.Dispatcher.BeginInvoke(
+								new Action(() =>
+								{
+									listBox_FolderFiles.ItemsSource = list_ff;
+								}));
+						}
+					}
+				//}));
 		}
+
+		private void listBox_FolderFiles_MouseUp(object sender, MouseButtonEventArgs e)
+		{
+
+		}
+
+		private void listBox_FolderFiles_MouseDoubleClick(object sender, MouseButtonEventArgs e)
+		{
+
+		}
+	}
+
+	public class FolderFile_data
+	{
+		public string      str_Type   { get; set; }
+		public BitmapImage image_Icon { get; set; }
+		public string      str_FFName { get; set; }
+		public string      str_FFPath { get; set; }
+		public long        long_Size  { get; set; }
+		public string      str_SizeS  { get; set; }
 	}
 }
