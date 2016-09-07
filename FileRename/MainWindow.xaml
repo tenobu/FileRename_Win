@@ -3,11 +3,25 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         Title="MainWindow" Height="350" Width="525" MinWidth="525" MinHeight="350"
         Loaded="Window_Loaded" Closing="Window_Closing">
-    
+
     <Window.Resources>
 
+        <DataTemplate x:Key="DataTemplate0">
+            <Grid Height="50" Width="100">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="50"/>
+                    <ColumnDefinition Width="*"/>
+                </Grid.ColumnDefinitions>
+                <Image Source="{Binding Path=image_Icon}"
+					   HorizontalAlignment="Left" Height="40" Margin="5,5,0,0" VerticalAlignment="Top" Width="40"/>
+                <Label Content="{Binding Path=str_FName}"
+					   Grid.Column="1" HorizontalAlignment="Left"
+					   Margin="10,10,10,10" VerticalAlignment="Top" Width="Auto"/>
+            </Grid>
+        </DataTemplate>
+
         <DataTemplate x:Key="DataTemplate1">
-            <Grid Height="50">
+            <Grid Height="50" Width="570">
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="50"/>
                     <ColumnDefinition Width="*"/>
@@ -15,17 +29,14 @@
                 <Image Source="{Binding Path=image_Icon}"
 					   HorizontalAlignment="Left" Height="40" Margin="5,5,0,0" VerticalAlignment="Top" Width="40"/>
                 <Label Content="{Binding Path=str_FFName}"
-					   Grid.Column="1" HorizontalAlignment="Stretch"
-					   Margin="10,10,10,0" VerticalAlignment="Top" Width="Auto"/>
+					   Grid.Column="1" HorizontalAlignment="Left"
+					   Margin="10,10,100,10" VerticalAlignment="Top" Width="Auto"/>
                 <Label Content="{Binding Path=str_SizeS}"
-					   Grid.Column="1" HorizontalAlignment="Stretch"
-					   Margin="10,0,10,10" VerticalAlignment="Bottom" Width="Auto"/>
-                <!--TextBlock Text="{Binding Path=Path}"
-						   Grid.Column="1" HorizontalAlignment="Stretch"
-						   Margin="10,35,10,10" VerticalAlignment="Stretch" Height="Auto"/-->
+					   Grid.Column="1" HorizontalAlignment="Right"
+					   VerticalAlignment="Bottom" Width="Auto"/>
             </Grid>
         </DataTemplate>
-    
+
     </Window.Resources>
 
     <Grid>
@@ -51,7 +62,13 @@
         <Label Name="label_Size"
                Content="サイズ 0 Byte" Margin="43,57,10,0" VerticalAlignment="Top"/>
 
-        <ListBox Name="listBox_FolderFiles" Margin="43,90,10,61" Visibility="Visible"
+        <TreeView Name="treeView_Folder"
+                  HorizontalAlignment="Left" Margin="12,90,0,61" Width="108" Visibility="Visible"
+                 ItemsSource="{Binding folders_Data}"
+				 ItemTemplate="{DynamicResource DataTemplate0}"
+				 MouseUp="treeView_Folder_MouseUp" MouseDoubleClick="treeView_Folder_MouseDoubleClick"/>
+
+        <ListBox Name="listBox_FolderFiles" Margin="129,90,10,61" Visibility="Visible"
                  ItemsSource="{Binding FolderFile_data}"
 				 ItemTemplate="{DynamicResource DataTemplate1}" SelectionMode="Single"
 				 MouseUp="listBox_FolderFiles_MouseUp" MouseDoubleClick="listBox_FolderFiles_MouseDoubleClick"/>
